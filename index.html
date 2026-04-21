@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#cdb4db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Migraine Helper">
+  <meta name="description" content="A soft, supportive migraine tracking PWA for gentle daily care.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <title>Migraine Helper</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Migraine Helper</p>
+        <h1 class="app-title">A gentle little space for you</h1>
+      </div>
+      <button class="icon-button" id="installButton" type="button" hidden aria-label="Install app">
+        <span>⬇️</span>
+      </button>
+    </header>
+
+    <main class="view-stack">
+      <section class="view active" id="view-home" data-view="home" aria-labelledby="home-heading">
+        <div class="hero-card floating-card">
+          <p class="eyebrow">🌸 Home</p>
+          <h2 id="home-heading">Today, little one</h2>
+          <p class="support-copy" id="todaySummary">You are doing your best today, and that counts.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-heading">
+              <h3>Daily progress</h3>
+              <span>🌼</span>
+            </div>
+            <div class="progress-ring-wrap">
+              <div class="progress-ring" id="dailyProgressRing">
+                <span id="dailyProgressText">0%</span>
+              </div>
+            </div>
+            <p class="muted" id="dailyProgressDetail">No check-ins yet today.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-heading">
+              <h3>This week</h3>
+              <span>💜</span>
+            </div>
+            <p class="stat-number" id="weeklyMigraineCount">0</p>
+            <p class="muted">migraine days logged in the last 7 days</p>
+          </article>
+        </div>
+
+        <article class="card insights-card">
+          <div class="card-heading">
+            <h3>Gentle insights</h3>
+            <span>🧠</span>
+          </div>
+          <div id="insightsList" class="insights-list"></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-log" data-view="log" aria-labelledby="log-heading">
+        <article class="card">
+          <div class="card-heading">
+            <h2 id="log-heading">Log how today feels</h2>
+            <span>📊</span>
+          </div>
+
+          <form id="logForm" class="stack">
+            <label class="field">
+              <span>Date</span>
+              <input type="date" id="logDate" required>
+            </label>
+
+            <div class="field">
+              <span>Migraine today?</span>
+              <div class="segmented-control">
+                <label>
+                  <input type="radio" name="migraine" value="yes" required>
+                  <span>Yes</span>
+                </label>
+                <label>
+                  <input type="radio" name="migraine" value="no">
+                  <span>No</span>
+                </label>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Severity (1-10)</span>
+              <input type="range" min="1" max="10" value="5" id="logSeverity">
+              <strong id="severityValue">5</strong>
+            </label>
+
+            <label class="field">
+              <span>Trigger</span>
+              <input type="text" id="logTrigger" maxlength="80" placeholder="stress, skipped lunch, bright lights...">
+            </label>
+
+            <label class="field">
+              <span>Notes</span>
+              <textarea id="logNotes" rows="4" placeholder="Anything you want to remember, little one?"></textarea>
+            </label>
+
+            <button class="primary-button" type="submit">Save gentle log</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-heading">
+            <h3>Bring your data with you</h3>
+            <span>📦</span>
+          </div>
+          <div class="button-row">
+            <button class="secondary-button" id="exportJsonButton" type="button">Export JSON</button>
+            <button class="secondary-button" id="exportCsvButton" type="button">Export CSV</button>
+          </div>
+          <div class="button-row">
+            <label class="secondary-button file-button">
+              Import JSON
+              <input type="file" id="importJsonInput" accept="application/json">
+            </label>
+            <button class="danger-button" id="clearLogsButton" type="button">Clear logs</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-heading">
+            <h3>Recent logs</h3>
+            <span>📝</span>
+          </div>
+          <div id="recentLogs" class="log-list"></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-attack" data-view="attack" aria-labelledby="attack-heading">
+        <article class="card attack-card">
+          <div class="card-heading">
+            <h2 id="attack-heading">Attack support</h2>
+            <span>💥</span>
+          </div>
+          <p class="support-copy">Breathe slowly, little one. Let this screen hold the checklist while you rest.</p>
+
+          <ul class="checklist" id="attackChecklist">
+            <li><label><input type="checkbox" value="Drink water"> <span>Drink water</span></label></li>
+            <li><label><input type="checkbox" value="Small caffeine (early only)"> <span>Small caffeine (early only)</span></label></li>
+            <li><label><input type="checkbox" value="Ice pack"> <span>Ice pack</span></label></li>
+            <li><label><input type="checkbox" value="Dark quiet room"> <span>Dark quiet room</span></label></li>
+            <li><label><input type="checkbox" value="Rest eyes"> <span>Rest eyes</span></label></li>
+          </ul>
+
+          <div class="timer-panel" id="timerPanel">
+            <p class="eyebrow">Soft reset timer</p>
+            <div class="timer-display" id="timerDisplay">20:00</div>
+            <p class="muted">Turn on Do Not Disturb</p>
+            <div class="button-row">
+              <button class="primary-button" id="startTimerButton" type="button">Start 20 minutes</button>
+              <button class="secondary-button" id="resetTimerButton" type="button">Reset</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="view-daily" data-view="daily" aria-labelledby="daily-heading">
+        <article class="card">
+          <div class="card-heading">
+            <h2 id="daily-heading">Daily rhythm</h2>
+            <span>🌼</span>
+          </div>
+          <p class="support-copy">Tiny steps still count, little one. Check them off as the day moves along.</p>
+          <div id="dailyChecklist" class="daily-list"></div>
+        </article>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-button active" data-target="home" type="button"><span>🏠</span><span>Home</span></button>
+      <button class="nav-button" data-target="log" type="button"><span>📊</span><span>Log</span></button>
+      <button class="nav-button" data-target="attack" type="button"><span>💥</span><span>Attack</span></button>
+      <button class="nav-button" data-target="daily" type="button"><span>🌼</span><span>Daily</span></button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
